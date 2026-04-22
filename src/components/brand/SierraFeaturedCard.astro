@@ -1,0 +1,29 @@
+---
+interface Props {
+	title: string;
+	text: string;
+	badge?: string;
+	accent?: 'forest' | 'gold' | 'moss';
+}
+
+const {
+	title,
+	text,
+	badge,
+	accent = 'forest',
+} = Astro.props;
+---
+
+<article class:list={['sw-card', `sw-card--${accent}`]}>
+	<div class="sw-card__top">
+		{badge && <span class="sw-card__badge">{badge}</span>}
+		<div class="sw-card__mark" aria-hidden="true">
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
+	</div>
+
+	<h3 class="sw-card__title">{title}</h3>
+	<p class="sw-card__text">{text}</p>
+</article>

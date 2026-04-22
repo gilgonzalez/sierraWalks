@@ -1,0 +1,58 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { blogNavLabel, footerRights, languageSwitcherLabel, localeLabel, type Locale } from '../i18n/translations';
+
+interface AlternateLink {
+	lang: string;
+	href: string;
+}
+
+interface Props {
+	title: string;
+	description: string;
+	lang?: string;
+	locale?: Locale;
+	alternates?: AlternateLink[];
+}
+
+const {
+	title,
+	description,
+	lang = 'en',
+	locale = 'en',
+	alternates = [],
+} = Astro.props;
+
+const localePath = (code: Locale) => (code === 'en' ? '/' : `/${code}/`);
+const switcherLinks = (['en', 'es', 'de'] as Locale[]).map((code) => ({
+	code,
+	label: localeLabel[code],
+	href: localePath(code),
+}));
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<BaseHead
+			title={title}
+			description={description}
+			lang={locale}
+			alternates={alternates}
+		/>
+		<ClientRouter />
+	</head>
+	<body>
+		<Header
+			locale={locale}
+			blogLabel={blogNavLabel[locale]}
+			switcherLabel={languageSwitcherLabel[locale]}
+			switcherLinks={switcherLinks}
+		/>
+		<slot />
+		<Footer rightsLabel={footerRights[locale]} />
+	</body>
+</html>

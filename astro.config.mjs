@@ -3,33 +3,42 @@
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { defineConfig, fontProviders } from 'astro/config';
+import tailwindcss from '@tailwindcss/vite';
+
+import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://example.com',
-	integrations: [mdx(), sitemap()],
-	fonts: [
-		{
-			provider: fontProviders.local(),
-			name: 'Atkinson',
-			cssVariable: '--font-atkinson',
-			fallbacks: ['sans-serif'],
-			options: {
-				variants: [
-					{
-						src: ['./src/assets/fonts/atkinson-regular.woff'],
-						weight: 400,
-						style: 'normal',
-						display: 'swap',
-					},
-					{
-						src: ['./src/assets/fonts/atkinson-bold.woff'],
-						weight: 700,
-						style: 'normal',
-						display: 'swap',
-					},
-				],
-			},
-		},
-	],
+    site: 'https://sierrawalks.com',
+    i18n: {
+        defaultLocale: 'en',
+        locales: ['en', 'es', 'de'],
+        routing: {
+            prefixDefaultLocale: false,
+        },
+    },
+    integrations: [mdx(), sitemap(), react()],
+    vite: {
+        plugins: [tailwindcss()],
+    },
+    fonts: [
+        {
+            provider: fontProviders.google(),
+            name: 'Fraunces',
+            cssVariable: '--font-display',
+            weights: [600, 700],
+            styles: ['normal'],
+            subsets: ['latin'],
+            fallbacks: ['serif'],
+        },
+        {
+            provider: fontProviders.google(),
+            name: 'Manrope',
+            cssVariable: '--font-ui',
+            weights: [400, 500, 600, 700],
+            styles: ['normal'],
+            subsets: ['latin'],
+            fallbacks: ['sans-serif'],
+        },
+    ],
 });

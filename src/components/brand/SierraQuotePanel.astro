@@ -1,0 +1,26 @@
+---
+interface Props {
+	quote: string;
+	source: string;
+	context?: string;
+}
+
+const {
+	quote,
+	source,
+	context,
+} = Astro.props;
+---
+
+<figure class="sw-quote">
+	<div class="sw-quote__glyph" aria-hidden="true">“</div>
+
+	<blockquote class="sw-quote__text">
+		<p>{quote}</p>
+	</blockquote>
+
+	<figcaption class="sw-quote__meta">
+		<strong>{source}</strong>
+		{context && <span>{context}</span>}
+	</figcaption>
+</figure>

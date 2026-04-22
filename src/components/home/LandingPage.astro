@@ -1,0 +1,638 @@
+---
+import DayNightHero from "../../components/home/DayNightHero";
+import trailImage from "../../assets/blog-placeholder-5.jpg";
+import SierraFeatureCard from "../../components/brand/SierraFeaturedCard.astro";
+import SierraImagePanel from "../../components/brand/SierraImagePanel.astro";
+import SierraQuotePanel from "../../components/brand/SierraQuotePanel.astro";
+import MainLayout from "../../layouts/MainLayout.astro";
+import { homeCopy, type Locale } from "../../i18n/translations";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = homeCopy[locale];
+
+const localePath = (code: Locale) => (code === "en" ? "/" : `/${code}/`);
+const alternates = (["en", "es", "de"] as Locale[]).map((code) => ({
+  lang: code,
+  href: new URL(localePath(code), Astro.site).toString(),
+}));
+
+const cardAccents = ["forest", "gold", "moss"] as const;
+const homeSections = {
+  en: {
+    heroTitle: "The most memorable Andalucia is discovered on foot.",
+    heroLead:
+      "Guided and self-guided journeys through sierras, white villages and protected landscapes for travellers who want beauty, context and calm.",
+    heroPrimary: "Explore journeys",
+    heroSecondary: "Compare formats",
+    heroNoteEyebrow: "Slow travel, local depth",
+    heroNoteTitle: "Routes designed to make you want to stay in the landscape.",
+    heroNoteText:
+      "Less like a checklist, more like a way of entering mountain villages, forests, ridgelines and the cultural texture of inland Andalucia.",
+    proof: [
+      "25+ years of local knowledge",
+      "Guided & self-guided",
+      "Curated mountain journeys",
+    ],
+    journeysEyebrow: "Signature journeys",
+    journeysTitle: "Three ways into the sierra",
+    journeysIntro:
+      "Start with the mood of travel you want, then choose the route that fits it.",
+    journeys: [
+      [
+        "White villages and historic paths",
+        "For travellers drawn to architecture, local life and slower walking between villages.",
+      ],
+      [
+        "Forests, sierras and biodiversity",
+        "For walkers who want cork oak landscapes, protected nature and a stronger ecological reading of place.",
+      ],
+      [
+        "The Straits and migration landscapes",
+        "For open horizons, Atlantic light and one of southern Europe’s most singular movement corridors.",
+      ],
+    ],
+    whyTitle: "Why walking here feels different",
+    whyText:
+      "These mountains are not scenic background. They are a meeting point of climates, histories, migration routes and lived rural culture.",
+    whyBullets: [
+      "Routes shaped by landscape and rhythm, not only logistics.",
+      "A balance of nature, village life and cultural context.",
+      "Experiences designed for travellers who want depth, not rush.",
+    ],
+    quote:
+      "The best walking journeys do more than move you through a place. They teach you how to notice it.",
+    quoteSource: "The SierraWalks way",
+    quoteContext: "Landscape, history and pace held in balance",
+    imageEyebrow: "Protected mountain landscapes",
+    imageTitle: "A quieter, richer way to discover Andalucia.",
+    imageCaption:
+      "Journeys built around ridgelines, cork oak forests, white villages and the deeper stories held in the terrain.",
+    travellersEyebrow: "Find your fit",
+    travellersTitle: "Who these journeys are for",
+    travellersIntro:
+      "People rarely choose a route by fitness alone. They choose by tempo, curiosity and the kind of travel they want.",
+    travellers: [
+      [
+        "I want everything well planned",
+        "You want logistics, pacing and local decisions handled with care.",
+      ],
+      [
+        "I prefer to walk at my own rhythm",
+        "You value freedom, but still want a route designed by people who know the terrain.",
+      ],
+      [
+        "I want nature and culture together",
+        "You are looking for more than exercise: villages, history, biodiversity and a sense of place.",
+      ],
+    ],
+    formatsEyebrow: "Guided or self-guided",
+    formatsTitle: "Two ways to live the sierra",
+    formatsIntro:
+      "The best format depends less on fitness than on the experience you want.",
+    formats: [
+      [
+        "Guided journeys",
+        [
+          "More local interpretation and context.",
+          "A smoother experience with support built in.",
+          "Ideal if you want to focus fully on the place.",
+        ],
+      ],
+      [
+        "Self-guided journeys",
+        [
+          "More independence and personal pace.",
+          "Carefully designed routes without group structure.",
+          "Ideal if you like freedom with expert planning.",
+        ],
+      ],
+    ],
+    seasonsEyebrow: "When to come",
+    seasonsTitle: "Each season reveals a different mountain",
+    seasonsIntro:
+      "Timing changes the mood of the journey as much as the route itself.",
+    seasons: [
+      [
+        "Spring",
+        "Greener slopes, longer days and a stronger sense of movement through the landscape.",
+      ],
+      [
+        "Autumn",
+        "Lower light, clearer air and a calm, editorial beauty across the sierras.",
+      ],
+      [
+        "Winter in the south",
+        "A quieter season for travellers seeking mild light and uncrowded paths.",
+      ],
+    ],
+    ctaTitle:
+      "Tell us how you like to walk, and we will point you to the right journey.",
+    ctaText:
+      "Whether you want independence, more interpretation, village atmosphere or protected mountain scenery, SierraWalks can help you choose well.",
+    ctaButton: "Start planning your walk",
+  },
+  es: {
+    heroTitle: "La Andalucía más memorable se descubre caminando.",
+    heroLead:
+      "Viajes guiados y autoguiados por sierras, pueblos blancos y paisajes protegidos para viajeros que buscan belleza, contexto y calma.",
+    heroPrimary: "Explorar rutas",
+    heroSecondary: "Comparar formatos",
+    heroNoteEyebrow: "Viajar despacio, mirar mejor",
+    heroNoteTitle: "Rutas diseñadas para entrar en el paisaje.",
+    heroNoteText:
+      "Menos itinerario para tachar, más forma de habitar senderos, aldeas, bosques y la textura cultural de la montaña andaluza.",
+    proof: [
+      "25+ años de conocimiento local",
+      "Guiado y autoguiado",
+      "Rutas de montaña curadas",
+    ],
+    journeysEyebrow: "Experiencias destacadas",
+    journeysTitle: "Tres maneras de vivir la sierra",
+    journeysIntro:
+      "Empieza por la atmósfera del viaje que deseas y luego elige la ruta adecuada.",
+    journeys: [
+      [
+        "Pueblos blancos y caminos históricos",
+        "Para quienes buscan arquitectura rural, vida local y travesías pausadas entre pueblos.",
+      ],
+      [
+        "Bosques, sierras y biodiversidad",
+        "Para caminantes que quieren naturaleza protegida y una lectura ecológica más profunda del territorio.",
+      ],
+      [
+        "El Estrecho y los paisajes de migración",
+        "Para quienes buscan horizontes abiertos, luz atlántica y un paisaje realmente singular.",
+      ],
+    ],
+    whyTitle: "Por qué caminar aquí se siente distinto",
+    whyText:
+      "Estas sierras no son un decorado. Son un cruce de climas, historias, rutas migratorias y cultura rural viva.",
+    whyBullets: [
+      "Rutas pensadas por paisaje y ritmo, no solo por logística.",
+      "Equilibrio entre naturaleza, pueblos y contexto cultural.",
+      "Experiencias para viajeros que quieren profundidad, no prisa.",
+    ],
+    quote:
+      "Las mejores rutas no solo te llevan por un territorio. Te enseñan a mirarlo de otra manera.",
+    quoteSource: "La forma SierraWalks",
+    quoteContext: "Paisaje, historia y ritmo en equilibrio",
+    imageEyebrow: "Paisajes protegidos de montaña",
+    imageTitle: "Una forma más serena y rica de descubrir Andalucía.",
+    imageCaption:
+      "Rutas construidas alrededor de crestas, alcornocales, pueblos blancos y las historias profundas del territorio.",
+    travellersEyebrow: "Encuentra tu viaje",
+    travellersTitle: "Para quién están pensadas estas rutas",
+    travellersIntro:
+      "Casi nadie elige una ruta solo por nivel físico. La elige por ritmo, curiosidad y forma de viajar.",
+    travellers: [
+      [
+        "Quiero que todo esté bien pensado",
+        "Buscas una experiencia con logística, ritmo y decisiones locales bien resueltas.",
+      ],
+      [
+        "Prefiero caminar a mi aire",
+        "Valoras la libertad, pero con una ruta diseñada por quien conoce el terreno.",
+      ],
+      [
+        "Quiero naturaleza y cultura a la vez",
+        "Buscas algo más que ejercicio: pueblos, historia, biodiversidad y sentido de lugar.",
+      ],
+    ],
+    formatsEyebrow: "Guiado o autoguiado",
+    formatsTitle: "Dos maneras de vivir la sierra",
+    formatsIntro:
+      "El mejor formato depende menos del nivel físico que del tipo de experiencia que quieres.",
+    formats: [
+      [
+        "Viajes guiados",
+        [
+          "Más interpretación local y contexto.",
+          "Una experiencia más acompañada y fluida.",
+          "Ideal si quieres centrarte por completo en el lugar.",
+        ],
+      ],
+      [
+        "Viajes autoguiados",
+        [
+          "Más independencia y ritmo propio.",
+          "Rutas muy cuidadas sin estructura de grupo.",
+          "Ideal si valoras libertad con planificación experta.",
+        ],
+      ],
+    ],
+    seasonsEyebrow: "Cuándo venir",
+    seasonsTitle: "Cada estación revela una sierra distinta",
+    seasonsIntro:
+      "El momento del año cambia la atmósfera del viaje tanto como la ruta.",
+    seasons: [
+      [
+        "Primavera",
+        "Laderas más verdes, días largos y una sensación de paisaje en movimiento.",
+      ],
+      [
+        "Otoño",
+        "Luz más baja, aire limpio y una belleza calmada muy especial.",
+      ],
+      [
+        "Invierno suave del sur",
+        "Una estación discreta para quienes buscan luz serena y senderos poco concurridos.",
+      ],
+    ],
+    ctaTitle: "Cuéntanos cómo te gusta caminar y te ayudaremos a elegir bien.",
+    ctaText:
+      "Si buscas independencia, más acompañamiento, ambiente de pueblo o montaña protegida, SierraWalks puede orientarte.",
+    ctaButton: "Empieza a planificar tu ruta",
+  },
+  de: {
+    heroTitle: "Das eindrucksvollste Andalusien entdeckt man zu Fuß.",
+    heroLead:
+      "Geführte und selbstgeführte Reisen durch Sierras, weiße Dörfer und Schutzlandschaften für Reisende, die Schönheit, Tiefe und Ruhe suchen.",
+    heroPrimary: "Reisen entdecken",
+    heroSecondary: "Formate vergleichen",
+    heroNoteEyebrow: "Langsamer reisen, genauer sehen",
+    heroNoteTitle: "Routen, die dich wirklich in die Landschaft hineinführen.",
+    heroNoteText:
+      "Weniger Abhaken, mehr ein Zugang zu Wegen, Dörfern, Wäldern und zur kulturellen Tiefe des Berglands.",
+    proof: [
+      "25+ Jahre lokale Erfahrung",
+      "Geführt & selbstgeführt",
+      "Kuratiertes Bergwandern",
+    ],
+    journeysEyebrow: "Ausgewählte Reisen",
+    journeysTitle: "Drei Wege in die Sierra",
+    journeysIntro:
+      "Beginne mit der Stimmung deiner Reise und finde dann die passende Route.",
+    journeys: [
+      [
+        "Weiße Dörfer und historische Wege",
+        "Für Reisende, die Architektur, Dorfleben und langsameres Wandern schätzen.",
+      ],
+      [
+        "Wälder, Sierras und Biodiversität",
+        "Für Wanderer mit Interesse an Schutzgebieten und einer tieferen ökologischen Perspektive.",
+      ],
+      [
+        "Die Meerenge und Landschaften der Migration",
+        "Für offene Horizonte, Atlantiklicht und ein außergewöhnliches Grenzgebiet.",
+      ],
+    ],
+    whyTitle: "Warum Wandern hier anders wirkt",
+    whyText:
+      "Diese Sierras sind keine Kulisse. Sie sind ein Treffpunkt von Klima, Geschichte, Migration und gelebter ländlicher Kultur.",
+    whyBullets: [
+      "Routen nach Landschaft und Rhythmus gestaltet, nicht nur nach Logistik.",
+      "Balance aus Natur, Dorfleben und kulturellem Kontext.",
+      "Erlebnisse für Reisende, die Tiefe statt Eile suchen.",
+    ],
+    quote:
+      "Die besten Wanderreisen bewegen dich nicht nur durch einen Ort. Sie zeigen dir, wie du ihn wahrnimmst.",
+    quoteSource: "Die SierraWalks-Methode",
+    quoteContext: "Landschaft, Geschichte und Tempo im Gleichgewicht",
+    imageEyebrow: "Geschützte Berglandschaften",
+    imageTitle: "Eine ruhigere und reichere Art, Andalusien zu entdecken.",
+    imageCaption:
+      "Routen zwischen Höhenzügen, Korkeichenwäldern, weißen Dörfern und den tieferen Geschichten des Territoriums.",
+    travellersEyebrow: "Passende Reise finden",
+    travellersTitle: "Für wen diese Reisen gedacht sind",
+    travellersIntro:
+      "Die meisten Menschen wählen eine Route nicht nur nach Fitness, sondern nach Tempo, Interesse und Reiseform.",
+    travellers: [
+      [
+        "Ich möchte alles gut organisiert",
+        "Du wünschst dir Sorgfalt bei Logistik, Rhythmus und lokalen Entscheidungen.",
+      ],
+      [
+        "Ich wandere lieber in meinem eigenen Tempo",
+        "Du schätzt Freiheit, möchtest aber von lokaler Expertise profitieren.",
+      ],
+      [
+        "Ich will Natur und Kultur zusammen",
+        "Du suchst mehr als Bewegung: Dörfer, Geschichte, Biodiversität und Ortsgefühl.",
+      ],
+    ],
+    formatsEyebrow: "Geführt oder selbstgeführt",
+    formatsTitle: "Zwei Arten, die Sierra zu erleben",
+    formatsIntro:
+      "Das richtige Format hängt weniger von Fitness als vom gewünschten Reiseerlebnis ab.",
+    formats: [
+      [
+        "Geführte Reisen",
+        [
+          "Mehr lokale Einordnung und Kontext.",
+          "Begleiteter, reibungsloser Ablauf.",
+          "Ideal, wenn du dich ganz auf den Ort konzentrieren willst.",
+        ],
+      ],
+      [
+        "Selbstgeführte Reisen",
+        [
+          "Mehr Unabhängigkeit und eigenes Tempo.",
+          "Sorgfältig geplante Routen ohne Gruppenstruktur.",
+          "Ideal, wenn du Freiheit mit Expertenplanung willst.",
+        ],
+      ],
+    ],
+    seasonsEyebrow: "Beste Reisezeit",
+    seasonsTitle: "Jede Jahreszeit zeigt eine andere Sierra",
+    seasonsIntro:
+      "Der Zeitpunkt verändert die Stimmung einer Reise fast so stark wie die Route.",
+    seasons: [
+      [
+        "Frühling",
+        "Grünere Hänge, längere Tage und mehr Bewegung in der Landschaft.",
+      ],
+      [
+        "Herbst",
+        "Tieferes Licht, klare Luft und eine besonders ruhige Schönheit.",
+      ],
+      [
+        "Milder Winter im Süden",
+        "Eine stille Jahreszeit für Reisende, die Licht und leere Wege schätzen.",
+      ],
+    ],
+    ctaTitle:
+      "Sag uns, wie du gerne wanderst, und wir empfehlen dir die passende Reise.",
+    ctaText:
+      "Ob du Unabhängigkeit, mehr Begleitung, Dorfatmosphäre oder Schutzlandschaften suchst: SierraWalks hilft dir bei der Wahl.",
+    ctaButton: "Wanderreise planen",
+  },
+} as const;
+const page = homeSections[locale];
+const sectionNav = [
+  { id: "hero", label: copy.eyebrow },
+  { id: "journeys", label: page.journeysTitle },
+  { id: "why-sierra-walks", label: page.whyTitle },
+  { id: "landscape", label: page.imageTitle },
+  { id: "travellers", label: page.travellersTitle },
+  { id: "formats", label: page.formatsTitle },
+  { id: "seasons", label: page.seasonsTitle },
+  { id: "plan", label: page.ctaTitle },
+];
+---
+
+<MainLayout
+  locale={locale}
+  lang={copy.htmlLang}
+  title={copy.metaTitle}
+  description={copy.metaDescription}
+  alternates={alternates}
+>
+  <main class="landing landing-scroll-root">
+    <nav class="landing-dots" aria-label="Section navigation">
+      {sectionNav.map((section, index) => (
+        <a href={`#${section.id}`} class="landing-dot" data-section-dot={section.id} aria-label={section.label} title={section.label} aria-current={index === 0 ? "true" : "false"}>
+          <span class="landing-dot__bullet"></span>
+        </a>
+      ))}
+    </nav>
+
+    <section id="hero" class="landing-scroll-section landing-scroll-section--hero">
+      <DayNightHero
+        client:only="react"
+        key={locale}
+        locale={locale}
+        eyebrow={copy.eyebrow}
+        title={page.heroTitle}
+        lead={page.heroLead}
+      />
+
+      <div class="landing-hero-bar">
+      <div class="landing-actions">
+        <a class="btn-primary" href="#journeys">{page.heroPrimary}</a>
+        <a class="btn-secondary" href="#formats">{page.heroSecondary}</a>
+      </div>
+      <div class="landing-proof">
+        {page.proof.map((item) => <span>{item}</span>)}
+      </div>
+    </div>
+    </section>
+
+    <section id="journeys" class="landing-scroll-section">
+      <div class="landing-section-intro">
+        <p class="landing-eyebrow">{page.journeysEyebrow}</p><h2>
+          {page.journeysTitle}
+        </h2><p>{page.journeysIntro}</p>
+      </div>
+      <div class="landing-grid">
+        {
+          page.journeys.map(([title, text], index) => (
+            <SierraFeatureCard
+              title={title}
+              text={text}
+              badge={`0${index + 1}`}
+              accent={cardAccents[index % cardAccents.length]}
+            />
+          ))
+        }
+      </div>
+    </section>
+    <section class="landing-feature landing-scroll-section" id="why-sierra-walks">
+      <div class="landing-feature-copy">
+        <p class="landing-eyebrow">{copy.why}</p><h2>{page.whyTitle}</h2><p>
+          {page.whyText}
+        </p>
+      </div><ul class="landing-feature-list surface-list">
+        {page.whyBullets.map((item) => <li>{item}</li>)}
+      </ul>
+    </section>
+    <section class="landing-showcase landing-scroll-section" id="landscape">
+      <SierraQuotePanel
+        quote={page.quote}
+        source={page.quoteSource}
+        context={page.quoteContext}
+      /><SierraImagePanel
+        image={trailImage}
+        alt={page.imageTitle}
+        eyebrow={page.imageEyebrow}
+        title={page.imageTitle}
+        caption={page.imageCaption}
+      />
+    </section>
+    <section id="travellers" class="landing-scroll-section">
+      <div class="landing-section-intro">
+        <p class="landing-eyebrow">{page.travellersEyebrow}</p><h2>
+          {page.travellersTitle}
+        </h2><p>{page.travellersIntro}</p>
+      </div><div class="landing-grid">
+        {
+          page.travellers.map(([title, text]) => (
+            <article class="surface-card landing-story-card">
+              <>
+                <h3 class="surface-card__title">{title}</h3>
+                <p class="surface-card__text">{text}</p>
+              </>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+    <section id="formats" class="landing-scroll-section">
+      <div class="landing-section-intro">
+        <p class="landing-eyebrow">{page.formatsEyebrow}</p><h2>
+          {page.formatsTitle}
+        </h2><p>{page.formatsIntro}</p>
+      </div><div class="landing-split-grid">
+        {
+          page.formats.map(([title, items]) => (
+            <article class="surface-card landing-story-card">
+              <>
+                <h3 class="surface-card__title">{title}</h3>
+                <ul class="surface-card__list">
+                  {items.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              </>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+    <section id="seasons" class="landing-scroll-section">
+      <div class="landing-section-intro">
+        <p class="landing-eyebrow">{page.seasonsEyebrow}</p><h2>
+          {page.seasonsTitle}
+        </h2><p>{page.seasonsIntro}</p>
+      </div><div class="landing-grid">
+        {
+          page.seasons.map(([title, text]) => (
+            <article class="surface-card landing-season-card">
+              <>
+                <h3 class="surface-card__title">{title}</h3>
+                <p class="surface-card__text">{text}</p>
+              </>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+    <section class="landing-cta landing-scroll-section" id="plan">
+      <h2>{page.ctaTitle}</h2><p>{page.ctaText}</p><a
+        class="btn-primary"
+        href="#journeys">{page.ctaButton}</a>
+    </section>
+  </main>
+
+  <script>
+    const sections = Array.from(document.querySelectorAll<HTMLElement>(".landing-scroll-section"));
+    const dots = Array.from(document.querySelectorAll<HTMLAnchorElement>("[data-section-dot]"));
+
+    const syncDots = (id: string) => {
+      dots.forEach((dot) => {
+        const isActive = dot.dataset.sectionDot === id;
+        dot.setAttribute("aria-current", isActive ? "true" : "false");
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible?.target?.id) syncDots(visible.target.id);
+      },
+      { threshold: [0.35, 0.6, 0.85] }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    dots.forEach((dot) => {
+      dot.addEventListener("click", (event) => {
+        event.preventDefault();
+        const id = dot.dataset.sectionDot;
+        if (!id) return;
+        const target = document.getElementById(id);
+        if (!target) return;
+        syncDots(id);
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+  </script>
+
+  <style is:global>
+    html {
+      scroll-behavior: auto;
+      scroll-snap-type: y mandatory;
+    }
+
+    body {
+      scroll-snap-type: y mandatory;
+    }
+
+    .landing-scroll-root {
+      position: relative;
+    }
+
+    .landing-scroll-section {
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      scroll-margin-top: 0;
+    }
+
+    .landing-scroll-section--hero {
+      scroll-margin-top: 0;
+    }
+
+    .landing-dots {
+      position: fixed;
+      left: 1rem;
+      top: 50%;
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      transform: translateY(-50%);
+    }
+
+    .landing-dot {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 0.95rem;
+      height: 0.95rem;
+      text-decoration: none;
+    }
+
+    .landing-dot__bullet {
+      width: 0.42rem;
+      height: 0.42rem;
+      border-radius: 999px;
+      background: rgba(192, 193, 192, 0.26);
+      transition: background-color 0.18s ease, transform 0.18s ease;
+    }
+
+    .landing-dot[aria-current="true"] .landing-dot__bullet {
+      transform: scale(1.2);
+      background: rgba(255, 255, 255, 0.88);
+    }
+
+    @media (min-width: 960px) {
+      .landing-scroll-section {
+        min-height: calc(100vh - 88px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .landing-scroll-section--hero {
+        justify-content: flex-start;
+      }
+
+    }
+
+    @media (max-width: 767px) {
+      .landing-dots {
+        left: 0.55rem;
+        gap: 0.5rem;
+      }
+
+      .landing-dot {
+        width: 0.9rem;
+        height: 0.9rem;
+      }
+    }
+  </style>
+</MainLayout>

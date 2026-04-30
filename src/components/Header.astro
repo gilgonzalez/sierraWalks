@@ -1,5 +1,6 @@
 ---
 import { SITE_TITLE } from '../consts';
+import { itinerariesRouteSlug } from '../i18n/translations';
 
 interface SwitcherLink {
 	code: string;
@@ -12,6 +13,7 @@ interface Props {
 	switcherLabel?: string;
 	switcherLinks?: SwitcherLink[];
 	blogLabel?: string;
+	itinerariesLabel?: string;
 }
 
 const {
@@ -23,16 +25,21 @@ const {
 		{ code: 'de', label: 'Deutsch', href: '/de/' },
 	],
 	blogLabel = 'Journal',
+	itinerariesLabel = 'Itineraries',
 } = Astro.props;
 
 const homeHref = locale === 'en' ? '/' : `/${locale}/`;
 const blogHref = '/blog/';
+const itinerariesHref = locale === 'en'
+	? `/${itinerariesRouteSlug[locale]}`
+	: `/${locale}/${itinerariesRouteSlug[locale]}`;
 ---
 
 <header class="site-header">
 	<nav class="site-header__nav container-wide">
 		<a class="site-brand" href={homeHref}>{SITE_TITLE}</a>
 		<div class="site-header__actions">
+			<a class="site-nav-link" href={itinerariesHref}>{itinerariesLabel}</a>
 			<a class="site-nav-link" href={blogHref}>{blogLabel}</a>
 			<div class="lang-switcher" aria-label={switcherLabel}>
 				<div class="lang-switcher__track">

@@ -1,0 +1,381 @@
+---
+import { itinerariesRouteSlug, type Locale } from '../i18n/translations';
+import ItineraryCard from './ItineraryCard.astro';
+import MainLayout from '../layouts/MainLayout.astro';
+import { getItineraryPath } from './itineraries';
+
+
+
+interface Props {
+  locale: Locale;
+}
+
+type Difficulty = "easy" | "moderate" | "challenging";
+
+interface Itinerary {
+  slug: string;
+  title: string;
+  area: string;
+  duration: string;
+  difficulty: Difficulty;
+  format: string;
+  priceFrom: string;
+  summary: string;
+  highlights: string[];
+  season: string;
+  steps?: string[];
+  isCircular?: boolean;
+}
+
+const { locale } = Astro.props;
+
+const localePath = (code: Locale, slug: string) =>
+  code === "en" ? `/${slug}` : `/${code}/${slug}`;
+
+const alternates = (["en", "es", "de"] as Locale[]).map((code) => ({
+  lang: code,
+  href: new URL(localePath(code, itinerariesRouteSlug[code]), Astro.site).toString(),
+}));
+
+const copy = {
+  en: {
+    lang: "en",
+    title: "Itineraries | SierraWalks",
+    description: "Mock itinerary listing to design the future journeys section.",
+    eyebrow: "Itineraries",
+    heading: "A first itinerary listing to shape the future section.",
+    intro:
+      "This page uses mock data so we can work on layout, hierarchy and card design before connecting real trips.",
+    cta: "View itinerary",
+    slugLabel: "Mock slug",
+    metaSeason: "Season",
+    metaPrice: "Price",
+    highlights: "Highlights",
+    routeLoopTooltip: "Circular route",
+    routeLinearTooltip: "Point-to-point route",
+    searchPlaceholder: "Search by area, mood or landscape",
+    allFormats: "All formats",
+    allDifficulties: "All levels",
+    resultsLabel: "itineraries",
+    difficulty: {
+      easy: "Easy",
+      moderate: "Moderate",
+      challenging: "Challenging",
+    },
+    items: [
+      {
+        slug: "white-villages-grazalema",
+        title: "White villages and Grazalema trails",
+        area: "Sierra de Grazalema",
+        duration: "5 days / 4 nights",
+        difficulty: "moderate",
+        format: "Self-guided",
+        priceFrom: "From €620",
+        summary:
+          "A slower-paced itinerary combining panoramic walks, white villages and charming stays in the mountains.",
+        highlights: ["Zahara", "Pinsapar", "Village-to-village routes", "Boutique stays"],
+        season: "Spring and autumn",
+      },
+      {
+        slug: "alcornocales-historic-paths",
+        title: "Alcornocales and historic paths",
+        area: "Los Alcornocales",
+        duration: "4 days / 3 nights",
+        difficulty: "easy",
+        format: "Guided",
+        priceFrom: "From €540",
+        summary:
+          "A softer route through cork oak forests, Atlantic humidity and old rural paths with local context.",
+        highlights: ["Cork oak forest", "Rural heritage", "Gentle stages", "Local guide"],
+        season: "Winter, spring and autumn",
+      },
+      {
+        slug: "wildlife-biodiversity-sierras",
+        title: "Wildlife, biodiversity and southern sierras",
+        area: "Protected inland landscapes",
+        duration: "6 days / 5 nights",
+        difficulty: "moderate",
+        format: "Guided",
+        priceFrom: "From €890",
+        summary:
+          "Designed for travellers who want walking routes with ecology, birds, landscape reading and conservation context.",
+        highlights: ["Birdwatching", "Environmental interpretation", "Viewpoints", "Mid-mountain walks"],
+        season: "Spring",
+      },
+      {
+        slug: "strait-atlantic-light",
+        title: "The Strait and Atlantic light",
+        area: "Strait landscapes",
+        duration: "5 days / 4 nights",
+        difficulty: "challenging",
+        format: "Self-guided with support",
+        priceFrom: "From €710",
+        summary:
+          "A more open and demanding route with wind, coast, migration routes and a frontier feeling between continents.",
+        highlights: ["Coastal views", "Migration routes", "Open landscapes", "Remote support"],
+        season: "Autumn and spring",
+      },
+    ] satisfies Itinerary[],
+  },
+  es: {
+    lang: "es",
+    title: "Itinerarios | SierraWalks",
+    description: "Listado mock de itinerarios para maquetar la futura sección de viajes.",
+    eyebrow: "Itinerarios",
+    heading: "Una primera lista de itinerarios para diseñar la futura sección.",
+    intro:
+      "Esta página usa datos mock para trabajar la estructura visual, la jerarquía y el diseño de tarjetas antes de conectar viajes reales.",
+    cta: "Ver itinerario",
+    slugLabel: "Slug mock",
+    metaSeason: "Temporada",
+    metaPrice: "Precio",
+    highlights: "Destacados",
+    routeLoopTooltip: "Ruta circular",
+    routeLinearTooltip: "Ruta lineal",
+    searchPlaceholder: "Buscar por zona, estilo o paisaje",
+    allFormats: "Todos los formatos",
+    allDifficulties: "Todos los niveles",
+    resultsLabel: "itinerarios",
+    difficulty: {
+      easy: "Fácil",
+      moderate: "Moderado",
+      challenging: "Exigente",
+    },
+    items: [
+      {
+        slug: "pueblos-blancos-grazalema",
+        title: "Pueblos Blancos y senderos de Grazalema",
+        area: "Sierra de Grazalema",
+        duration: "5 días / 4 noches",
+        difficulty: "moderate",
+        format: "Autoguiado",
+        priceFrom: "Desde 620 €",
+        summary:
+          "Un itinerario pensado para combinar caminatas panorámicas con noches en pueblos blancos, gastronomía local y un ritmo tranquilo.",
+        highlights: ["Zahara", "Pinsapar", "Rutas entre pueblos", "Alojamientos con encanto"],
+        season: "Primavera y otoño",
+      },
+      {
+        slug: "alcornocales-y-caminos-historicos",
+        title: "Alcornocales y caminos históricos",
+        area: "Los Alcornocales",
+        duration: "4 días / 3 noches",
+        difficulty: "easy",
+        format: "Guiado",
+        priceFrom: "Desde 540 €",
+        summary:
+          "Recorrido suave entre bosques, nieblas atlánticas y antiguos caminos rurales para viajeros que priorizan paisaje y contexto.",
+        highlights: ["Bosques de alcornoques", "Patrimonio rural", "Etapas asequibles", "Guía local"],
+        season: "Invierno, primavera y otoño",
+      },
+      {
+        slug: "biodiversidad-aves-y-sierras",
+        title: "Biodiversidad, aves y sierras del sur",
+        area: "Parques naturales del interior andaluz",
+        duration: "6 días / 5 noches",
+        difficulty: "moderate",
+        format: "Guiado",
+        priceFrom: "Desde 890 €",
+        summary:
+          "Una propuesta con foco en naturaleza y observación del territorio, ideal para viajeros interesados en fauna, botánica y conservación.",
+        highlights: ["Observación de aves", "Interpretación ambiental", "Miradores", "Media montaña"],
+        season: "Primavera",
+      },
+      {
+        slug: "estrecho-y-luz-del-atlantico",
+        title: "Estrecho, migraciones y luz del Atlántico",
+        area: "Entorno del Estrecho",
+        duration: "5 días / 4 noches",
+        difficulty: "challenging",
+        format: "Autoguiado con soporte",
+        priceFrom: "Desde 710 €",
+        summary:
+          "Etapas más abiertas y expuestas, con grandes horizontes, viento, costa y sensación de frontera entre continentes.",
+        highlights: ["Panorámicas costeras", "Rutas migratorias", "Paisaje abierto", "Soporte remoto"],
+        season: "Otoño y primavera",
+      },
+    ] satisfies Itinerary[],
+  },
+  de: {
+    lang: "de",
+    title: "Reisen | SierraWalks",
+    description: "Mock-Liste von Reiseverläufen zum Gestalten der künftigen Reisesektion.",
+    eyebrow: "Reisen",
+    heading: "Eine erste Reiseliste, um die zukünftige Sektion zu gestalten.",
+    intro:
+      "Diese Seite nutzt Mock-Daten, damit wir Struktur, Informationshierarchie und Kartenlayout ausarbeiten können, bevor echte Reisen angebunden werden.",
+    cta: "Reise ansehen",
+    slugLabel: "Mock-Slug",
+    metaSeason: "Saison",
+    metaPrice: "Preis",
+    highlights: "Highlights",
+    routeLoopTooltip: "Rundroute",
+    routeLinearTooltip: "Streckenroute",
+    searchPlaceholder: "Nach Region, Stimmung oder Landschaft suchen",
+    allFormats: "Alle Formate",
+    allDifficulties: "Alle Niveaus",
+    resultsLabel: "Reisen",
+    difficulty: {
+      easy: "Leicht",
+      moderate: "Mittel",
+      challenging: "Anspruchsvoll",
+    },
+    items: [
+      {
+        slug: "weisse-doerfer-grazalema",
+        title: "Weiße Dörfer und Wege in Grazalema",
+        area: "Sierra de Grazalema",
+        duration: "5 Tage / 4 Nächte",
+        difficulty: "moderate",
+        format: "Selbstgeführt",
+        priceFrom: "Ab 620 €",
+        summary:
+          "Eine ruhigere Reise mit Panoramawanderungen, weißen Dörfern und charmanten Unterkünften in den Bergen.",
+        highlights: ["Zahara", "Pinsapar", "Wege zwischen Dörfern", "Charmante Unterkünfte"],
+        season: "Frühling und Herbst",
+      },
+      {
+        slug: "alcornocales-und-historische-wege",
+        title: "Alcornocales und historische Wege",
+        area: "Los Alcornocales",
+        duration: "4 Tage / 3 Nächte",
+        difficulty: "easy",
+        format: "Geführt",
+        priceFrom: "Ab 540 €",
+        summary:
+          "Eine sanftere Route durch Korkeichenwälder, Atlantikfeuchte und alte ländliche Wege mit lokalem Kontext.",
+        highlights: ["Korkeichenwald", "Ländliches Erbe", "Leichte Etappen", "Lokaler Guide"],
+        season: "Winter, Frühling und Herbst",
+      },
+      {
+        slug: "artenvielfalt-und-sierras",
+        title: "Artenvielfalt, Vögel und Sierras des Südens",
+        area: "Geschützte Landschaften im Inland",
+        duration: "6 Tage / 5 Nächte",
+        difficulty: "moderate",
+        format: "Geführt",
+        priceFrom: "Ab 890 €",
+        summary:
+          "Für Reisende, die Wandern mit Ökologie, Vogelwelt, Landschaftsverständnis und Naturschutz verbinden möchten.",
+        highlights: ["Vogelbeobachtung", "Naturinterpretation", "Aussichtspunkte", "Mittelgebirgsrouten"],
+        season: "Frühling",
+      },
+      {
+        slug: "meerenge-und-atlantisches-licht",
+        title: "Die Meerenge und das Licht des Atlantiks",
+        area: "Landschaften der Meerenge",
+        duration: "5 Tage / 4 Nächte",
+        difficulty: "challenging",
+        format: "Selbstgeführt mit Support",
+        priceFrom: "Ab 710 €",
+        summary:
+          "Eine offenere und forderndere Route mit Wind, Küste, Zugrouten und dem Gefühl einer Grenze zwischen Kontinenten.",
+        highlights: ["Küstenpanoramen", "Zugrouten", "Offene Landschaft", "Remote-Support"],
+        season: "Herbst und Frühling",
+      },
+    ] satisfies Itinerary[],
+  },
+} as const;
+
+const page = copy[locale];
+const itineraryRouteMeta = {
+  en: {
+    "white-villages-grazalema": { steps: ["Ronda", "Zahara", "Grazalema", "Pinsapar"], isCircular: true },
+    "alcornocales-historic-paths": { steps: ["Jimena", "Aljibe", "Forest track", "Castellar"], isCircular: false },
+    "wildlife-biodiversity-sierras": { steps: ["Visitor centre", "Viewpoint", "Wetland", "Sierra trail"], isCircular: true },
+    "strait-atlantic-light": { steps: ["Tarifa", "Clifftop", "Migration point", "Atlantic ridge"], isCircular: false },
+  },
+  es: {
+    "pueblos-blancos-grazalema": { steps: ["Ronda", "Zahara", "Grazalema", "Pinsapar"], isCircular: true },
+    "alcornocales-y-caminos-historicos": { steps: ["Jimena", "Aljibe", "Pista forestal", "Castellar"], isCircular: false },
+    "biodiversidad-aves-y-sierras": { steps: ["Centro de visitantes", "Mirador", "Humedal", "Senda de sierra"], isCircular: true },
+    "estrecho-y-luz-del-atlantico": { steps: ["Tarifa", "Acantilado", "Paso migratorio", "Loma atlántica"], isCircular: false },
+  },
+  de: {
+    "weisse-doerfer-grazalema": { steps: ["Ronda", "Zahara", "Grazalema", "Pinsapar"], isCircular: true },
+    "alcornocales-und-historische-wege": { steps: ["Jimena", "Aljibe", "Waldweg", "Castellar"], isCircular: false },
+    "artenvielfalt-und-sierras": { steps: ["Besucherzentrum", "Aussichtspunkt", "Feuchtgebiet", "Sierra-Pfad"], isCircular: true },
+    "meerenge-und-atlantisches-licht": { steps: ["Tarifa", "Klippe", "Zugroute", "Atlantikrücken"], isCircular: false },
+  },
+} as const;
+const items = page.items.map((item) => {
+  const routeMeta = itineraryRouteMeta[locale][item.slug as keyof typeof itineraryRouteMeta[typeof locale]];
+  return {
+    ...item,
+    steps: routeMeta.steps,
+    isCircular: routeMeta.isCircular,
+  };
+});
+const formats = [...new Set(items.map((item) => item.format))];
+---
+
+<MainLayout
+  locale={locale}
+  lang={page.lang}
+  title={page.title}
+  description={page.description}
+  alternates={alternates}
+>
+  <main class="mx-auto max-w-7xl px-4 pb-16 pt-8 sm:px-6 lg:px-8 lg:pb-24 lg:pt-12">
+    <section class="rounded-[2rem] border border-black/5 bg-white/65 px-5 py-8 shadow-[0_18px_50px_rgba(23,49,38,0.07)] backdrop-blur-sm sm:px-8 sm:py-10 lg:px-12 lg:py-14">
+      <p class="text-[0.75rem] font-extrabold uppercase tracking-[0.18em] text-[#7a5c1a]">{page.eyebrow}</p>
+      <div class="mt-3 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <div class="max-w-4xl">
+          <h1 class="text-4xl tracking-[-0.04em] text-[#173126] sm:text-5xl lg:text-6xl">{page.heading}</h1>
+          <p class="mt-5 max-w-3xl text-base leading-7 text-[#173126]/72 sm:text-lg sm:leading-8">{page.intro}</p>
+        </div>
+        <p class="text-sm font-semibold text-[#173126]/48"><span data-results-count>{items.length}</span> {page.resultsLabel}</p>
+      </div>
+    </section>
+
+    <section class="mt-6 rounded-[1.5rem] border border-black/5 bg-white/70 p-3 shadow-[0_12px_30px_rgba(23,49,38,0.05)] backdrop-blur-sm sm:p-4">
+      <div class="grid gap-3 md:grid-cols-[minmax(0,1.5fr)_minmax(0,0.8fr)_minmax(0,0.8fr)]">
+        <input data-filter-search type="search" placeholder={page.searchPlaceholder} class="h-12 rounded-2xl border border-[#173126]/10 bg-white px-4 text-sm text-[#173126] outline-none placeholder:text-[#173126]/38" />
+        <select data-filter-format class="h-12 rounded-2xl border border-[#173126]/10 bg-white px-4 text-sm text-[#173126] outline-none">
+          <option value="">{page.allFormats}</option>
+          {formats.map((format) => <option value={format}>{format}</option>)}
+        </select>
+        <select data-filter-difficulty class="h-12 rounded-2xl border border-[#173126]/10 bg-white px-4 text-sm text-[#173126] outline-none">
+          <option value="">{page.allDifficulties}</option>
+          {Object.entries(page.difficulty).map(([value, label]) => <option value={value}>{label}</option>)}
+        </select>
+      </div>
+    </section>
+
+    <section class="mt-10 grid gap-x-5 gap-y-10 lg:mt-12 lg:grid-cols-2 lg:gap-x-6 lg:gap-y-12" data-itineraries-grid>
+      {items.map((item) => (
+        <ItineraryCard item={item} labels={page} href={getItineraryPath(locale, item.slug)} />
+      ))}
+    </section>
+  </main>
+
+  <script>
+    const grid = document.querySelector("[data-itineraries-grid]");
+    const cards = Array.from(document.querySelectorAll("[data-itinerary-card]"));
+    const search = document.querySelector("[data-filter-search]");
+    const format = document.querySelector("[data-filter-format]");
+    const difficulty = document.querySelector("[data-filter-difficulty]");
+    const count = document.querySelector("[data-results-count]");
+
+    const applyFilters = () => {
+      const q = search instanceof HTMLInputElement ? search.value.toLowerCase().trim() : "";
+      const f = format instanceof HTMLSelectElement ? format.value : "";
+      const d = difficulty instanceof HTMLSelectElement ? difficulty.value : "";
+      let visible = 0;
+      cards.forEach((card) => {
+        if (!(card instanceof HTMLElement)) return;
+        const haystack = card.dataset.search ?? "";
+        const matchQ = !q || haystack.includes(q);
+        const matchF = !f || card.dataset.format === f;
+        const matchD = !d || card.dataset.difficulty === d;
+        const show = matchQ && matchF && matchD;
+        card.style.display = show ? "block" : "none";
+        if (show) visible += 1;
+      });
+      if (count) count.textContent = String(visible);
+      if (grid instanceof HTMLElement) grid.dataset.empty = visible === 0 ? "true" : "false";
+    };
+
+    [search, format, difficulty].forEach((el) => el?.addEventListener("input", applyFilters));
+    applyFilters();
+  </script>

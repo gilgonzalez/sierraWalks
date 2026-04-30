@@ -1,0 +1,18 @@
+---
+import { getItineraryBySlug } from '../../../components/itineraries';
+import ItineraryDetailPage from '../../../components/ItineraryDetails.astro';
+
+
+
+export function getStaticPaths() {
+  return [{ params: { slug: "pueblos-blancos-grazalema" } }];
+}
+
+const { slug } = Astro.params;
+const itinerary = getItineraryBySlug("es", slug ?? "");
+
+if (!itinerary) {
+  return Astro.redirect("/es/itinerarios");
+}
+---
+<ItineraryDetailPage locale="es" itinerary={itinerary} />

@@ -18,6 +18,18 @@ export const blogNavLabel: Record<Locale, string> = {
 	de: 'Journal',
 };
 
+export const itinerariesNavLabel: Record<Locale, string> = {
+	en: 'Itineraries',
+	es: 'Itinerarios',
+	de: 'Reisen',
+};
+
+export const itinerariesRouteSlug: Record<Locale, string> = {
+	en: 'itineraries',
+	es: 'itinerarios',
+	de: 'reisen',
+};
+
 export const footerRights: Record<Locale, string> = {
 	en: 'All rights reserved.',
 	es: 'Todos los derechos reservados.',

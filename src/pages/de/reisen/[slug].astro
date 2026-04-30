@@ -1,0 +1,18 @@
+---
+import { getItineraryBySlug } from '../../../components/itineraries';
+import ItineraryDetailPage from '../../../components/ItineraryDetails.astro';
+
+
+
+export function getStaticPaths() {
+  return [{ params: { slug: "weisse-doerfer-grazalema" } }];
+}
+
+const { slug } = Astro.params;
+const itinerary = getItineraryBySlug("de", slug ?? "");
+
+if (!itinerary) {
+  return Astro.redirect("/de/reisen");
+}
+---
+<ItineraryDetailPage locale="de" itinerary={itinerary} />

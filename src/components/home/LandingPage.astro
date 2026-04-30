@@ -5,7 +5,7 @@ import SierraFeatureCard from "../../components/brand/SierraFeaturedCard.astro";
 import SierraImagePanel from "../../components/brand/SierraImagePanel.astro";
 import SierraQuotePanel from "../../components/brand/SierraQuotePanel.astro";
 import MainLayout from "../../layouts/MainLayout.astro";
-import { homeCopy, type Locale } from "../../i18n/translations";
+import { homeCopy, itinerariesRouteSlug, type Locale } from "../../i18n/translations";
 
 interface Props {
   locale: Locale;
@@ -15,7 +15,11 @@ const { locale } = Astro.props;
 const copy = homeCopy[locale];
 
 const localePath = (code: Locale) => (code === "en" ? "/" : `/${code}/`);
+const itinerariesPath = locale === "en"
+  ? `/${itinerariesRouteSlug[locale]}`
+  : `/${locale}/${itinerariesRouteSlug[locale]}`;
 const alternates = (["en", "es", "de"] as Locale[]).map((code) => ({
+
   lang: code,
   href: new URL(localePath(code), Astro.site).toString(),
 }));
@@ -402,7 +406,7 @@ const sectionNav = [
 
       <div class="landing-hero-bar">
       <div class="landing-actions">
-        <a class="btn-primary" href="#journeys">{page.heroPrimary}</a>
+        <a class="btn-primary" href={itinerariesPath}>{page.heroPrimary}</a>
         <a class="btn-secondary" href="#formats">{page.heroSecondary}</a>
       </div>
       <div class="landing-proof">
@@ -513,7 +517,7 @@ const sectionNav = [
     <section class="landing-cta landing-scroll-section" id="plan">
       <h2>{page.ctaTitle}</h2><p>{page.ctaText}</p><a
         class="btn-primary"
-        href="#journeys">{page.ctaButton}</a>
+        href={itinerariesPath}>{page.ctaButton}</a>
     </section>
   </main>
 

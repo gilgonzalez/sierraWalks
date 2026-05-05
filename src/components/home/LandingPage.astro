@@ -27,10 +27,10 @@ const alternates = (["en", "es", "de"] as Locale[]).map((code) => ({
 const cardAccents = ["forest", "gold", "moss"] as const;
 const homeSections = {
   en: {
-    heroTitle: "The most memorable Andalucia is discovered on foot.",
+    heroTitle: "Find your path through Andalucia.",
     heroLead:
-      "Guided and self-guided journeys through sierras, white villages and protected landscapes for travellers who want beauty, context and calm.",
-    heroPrimary: "Explore journeys",
+      "Step into Andalucia through guided and self-guided journeys shaped by mountain trails, white villages and protected landscapes for travellers seeking beauty, depth and calm.",
+    heroPrimary: "Find your journey",
     heroSecondary: "Compare formats",
     heroNoteEyebrow: "Slow travel, local depth",
     heroNoteTitle: "Routes designed to make you want to stay in the landscape.",
@@ -140,7 +140,7 @@ const homeSections = {
     ctaButton: "Start planning your walk",
   },
   es: {
-    heroTitle: "La Andalucía más memorable se descubre caminando.",
+    heroTitle: "Encuentra tu camino por Andalucía.",
     heroLead:
       "Viajes guiados y autoguiados por sierras, pueblos blancos y paisajes protegidos para viajeros que buscan belleza, contexto y calma.",
     heroPrimary: "Explorar rutas",
@@ -252,7 +252,7 @@ const homeSections = {
     ctaButton: "Empieza a planificar tu ruta",
   },
   de: {
-    heroTitle: "Das eindrucksvollste Andalusien entdeckt man zu Fuß.",
+    heroTitle: "Finde deinen Weg durch Andalusien.",
     heroLead:
       "Geführte und selbstgeführte Reisen durch Sierras, weiße Dörfer und Schutzlandschaften für Reisende, die Schönheit, Tiefe und Ruhe suchen.",
     heroPrimary: "Reisen entdecken",
@@ -366,16 +366,6 @@ const homeSections = {
   },
 } as const;
 const page = homeSections[locale];
-const sectionNav = [
-  { id: "hero", label: copy.eyebrow },
-  { id: "journeys", label: page.journeysTitle },
-  { id: "why-sierra-walks", label: page.whyTitle },
-  { id: "landscape", label: page.imageTitle },
-  { id: "travellers", label: page.travellersTitle },
-  { id: "formats", label: page.formatsTitle },
-  { id: "seasons", label: page.seasonsTitle },
-  { id: "plan", label: page.ctaTitle },
-];
 ---
 
 <MainLayout
@@ -386,14 +376,6 @@ const sectionNav = [
   alternates={alternates}
 >
   <main class="landing landing-scroll-root">
-    <nav class="landing-dots" aria-label="Section navigation">
-      {sectionNav.map((section, index) => (
-        <a href={`#${section.id}`} class="landing-dot" data-section-dot={section.id} aria-label={section.label} title={section.label} aria-current={index === 0 ? "true" : "false"}>
-          <span class="landing-dot__bullet"></span>
-        </a>
-      ))}
-    </nav>
-
     <section id="hero" class="landing-scroll-section landing-scroll-section--hero">
       <DayNightHero
         client:only="react"
@@ -521,41 +503,6 @@ const sectionNav = [
     </section>
   </main>
 
-  <script>
-    const sections = Array.from(document.querySelectorAll<HTMLElement>(".landing-scroll-section"));
-    const dots = Array.from(document.querySelectorAll<HTMLAnchorElement>("[data-section-dot]"));
-
-    const syncDots = (id: string) => {
-      dots.forEach((dot) => {
-        const isActive = dot.dataset.sectionDot === id;
-        dot.setAttribute("aria-current", isActive ? "true" : "false");
-      });
-    };
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible?.target?.id) syncDots(visible.target.id);
-      },
-      { threshold: [0.35, 0.6, 0.85] }
-    );
-
-    sections.forEach((section) => observer.observe(section));
-    dots.forEach((dot) => {
-      dot.addEventListener("click", (event) => {
-        event.preventDefault();
-        const id = dot.dataset.sectionDot;
-        if (!id) return;
-        const target = document.getElementById(id);
-        if (!target) return;
-        syncDots(id);
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-    });
-  </script>
-
   <style is:global>
     html {
       scroll-behavior: auto;
@@ -580,39 +527,6 @@ const sectionNav = [
       scroll-margin-top: 0;
     }
 
-    .landing-dots {
-      position: fixed;
-      left: 1rem;
-      top: 50%;
-      z-index: 40;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      transform: translateY(-50%);
-    }
-
-    .landing-dot {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 0.95rem;
-      height: 0.95rem;
-      text-decoration: none;
-    }
-
-    .landing-dot__bullet {
-      width: 0.42rem;
-      height: 0.42rem;
-      border-radius: 999px;
-      background: rgba(192, 193, 192, 0.26);
-      transition: background-color 0.18s ease, transform 0.18s ease;
-    }
-
-    .landing-dot[aria-current="true"] .landing-dot__bullet {
-      transform: scale(1.2);
-      background: rgba(255, 255, 255, 0.88);
-    }
-
     @media (min-width: 960px) {
       .landing-scroll-section {
         min-height: calc(100vh - 88px);
@@ -627,16 +541,5 @@ const sectionNav = [
 
     }
 
-    @media (max-width: 767px) {
-      .landing-dots {
-        left: 0.55rem;
-        gap: 0.5rem;
-      }
-
-      .landing-dot {
-        width: 0.9rem;
-        height: 0.9rem;
-      }
-    }
   </style>
 </MainLayout>

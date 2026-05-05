@@ -88,16 +88,22 @@ export default function DayNightHeroDesktop({
         alt=""
         className="absolute inset-0 h-full w-full object-cover object-top"
       />
-      <img
-        src={nightImage.src}
-        alt=""
-        className="absolute inset-0 h-full w-full object-contain [will-change:clip-path]"
-        style={{ clipPath: scene.nightClipPath }}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 [will-change:clip-path]"
+        style={{
+          clipPath: scene.nightClipPath,
+          backgroundColor: "#000",
+          backgroundImage: `url(${nightImage.src})`,
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "top",
+          backgroundSize: "cover",
+        }}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-black/15" />
 
-      <div className="relative z-10 flex h-full w-full flex-col justify-start px-4 py-5 lg:px-7 lg:py-8">
-        <div className="w-full max-w-[32rem] pt-10 pl-8 xl:max-w-[38rem] xl:pt-14 xl:pl-12">
+      <div className="relative z-10 flex h-full w-full flex-col justify-end px-4 pb-6 pt-5 lg:px-7 lg:pb-8 lg:pt-8">
+        <div className="w-full max-w-[32rem] pl-4 xl:max-w-[38rem]  xl:pl-8">
           <div
             className="rounded-[1.75rem] border px-5 py-5 xl:px-8 xl:py-7"
             style={copyPanelStyle}
@@ -112,7 +118,7 @@ export default function DayNightHeroDesktop({
               className="max-w-[13ch] text-4xl leading-none tracking-[-0.035em] xl:text-7xl"
               style={titleStyle}
             >
-              {title} DESKTOP
+              {title} 
             </h1>
             <p
               className="mt-4 max-w-2xl text-base leading-7 xl:text-lg xl:leading-8"

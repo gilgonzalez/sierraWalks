@@ -82,12 +82,12 @@ export const getLeadStyle = (progress: number): CSSProperties => ({
 });
 
 export const getCopyPanelStyle = (progress: number): CSSProperties => ({
-  background: `linear-gradient(135deg, rgba(248, 244, 236, ${mix(
-    0.54,
+  background: `linear-gradient(135deg, rgba(255, 252, 247, ${mix(
+    0.72,
     0.1,
     progress
-  ).toFixed(3)}), rgba(255, 255, 255, ${mix(0.22, 0.04, progress).toFixed(3)}))`,
-  borderColor: `rgba(255, 255, 255, ${mix(0.18, 0.08, progress).toFixed(3)})`,
-  boxShadow: `0 16px 40px rgba(23, 49, 38, ${mix(0.1, 0.025, progress).toFixed(3)})`,
+  ).toFixed(3)}), rgba(255, 255, 255, ${mix(0.42, 0.04, progress).toFixed(3)}))`,
+  borderColor: `rgba(255, 255, 255, ${mix(0.24, 0.08, progress).toFixed(3)})`,
+  boxShadow: `0 16px 40px rgba(23, 49, 38, ${mix(0.08, 0.025, progress).toFixed(3)})`,
   backdropFilter: `blur(${mix(8, 3, progress).toFixed(2)}px)`,
 });

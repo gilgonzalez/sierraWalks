@@ -112,6 +112,14 @@ export function getItineraryPath(locale: Locale, slug: string): string {
   return `${base}/${slug}`;
 }
 
+export function getLocalizedItineraryPath(targetLocale: Locale, itinerary: ItineraryDetail): string {
+  const sourceItems = itinerariesByLocale[itinerary.locale];
+  const itemIndex = sourceItems.findIndex((item) => item.slug === itinerary.slug);
+  const localizedItem = itemIndex >= 0 ? itinerariesByLocale[targetLocale][itemIndex] : undefined;
+
+  return getItineraryPath(targetLocale, localizedItem?.slug ?? itinerary.slug);
+}
+
 export function getItineraryBySlug(locale: Locale, slug: string): ItineraryDetail | undefined {
   return itinerariesByLocale[locale].find((item) => item.slug === slug);
 }

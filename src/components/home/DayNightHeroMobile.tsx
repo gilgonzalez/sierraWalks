@@ -1,8 +1,9 @@
-import { Moon, SunMedium } from "lucide-react";
+import { ChevronDown, Moon, SunMedium } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import dayImage from "../../assets/img/elpenon.jpg";
 import nightImage from "../../assets/img/themoon.webp";
 import {
+  buildMobileScene,
   copy,
   easeInOut,
   getEyebrowStyle,
@@ -12,19 +13,6 @@ import {
   type DayNightHeroProps,
 } from "./DayNightHeroShared";
 
-const buildMobileScene = (progress: number) => {
-  const orbitAngle = Math.PI * (0.18 + progress * 0.58);
-  const maskX = 82 + Math.cos(orbitAngle) * 8;
-  const maskY = 72 - Math.sin(orbitAngle) * 18;
-  const maskSize = 12 + progress * 162;
-
-  return {
-    nightClipPath: `circle(${maskSize.toFixed(2)}% at ${maskX.toFixed(
-      2
-    )}% ${maskY.toFixed(2)}%)`,
-  };
-};
-
 export default function DayNightHeroMobile({
   locale,
   eyebrow,
@@ -32,6 +20,7 @@ export default function DayNightHeroMobile({
   lead,
 }: DayNightHeroProps) {
   const [isNight, setIsNight] = useState(false);
+  const [isDetailsVisible, setIsDetailsVisible] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [progress, setProgress] = useState(0);
   const frameRef = useRef<number | null>(null);
@@ -39,30 +28,42 @@ export default function DayNightHeroMobile({
   const targetRef = useRef(0);
 
   const labels = copy[locale];
+  const detailLabels = {
+    en: { show: "Show details", hide: "Hide details" },
+    es: { show: "Ver detalle", hide: "Ocultar detalle" },
+    de: { show: "Details anzeigen", hide: "Details ausblenden" },
+  }[locale];
   const scene = useMemo(() => buildMobileScene(progress), [progress]);
   const eyebrowStyle = getEyebrowStyle(progress);
   const titleStyle = getTitleStyle(progress);
   const leadStyle = getLeadStyle(progress);
+  const chevronStyle = {
+    color: `rgba(${Math.round(mix(16, 244, progress))}, ${Math.round(mix(32, 248, progress))}, ${Math.round(mix(24, 255, progress))}, ${mix(0.72, 0.96, progress).toFixed(3)})`,
+  };
   const copyPanelStyle = {
-    background: `linear-gradient(180deg, rgba(248, 244, 236, ${mix(0.24, 0.08, progress).toFixed(3)}), rgba(255, 255, 255, ${mix(0.08, 0.022, progress).toFixed(3)}))`,
-    borderColor: `rgba(255, 255, 255, ${mix(0.11, 0.055, progress).toFixed(3)})`,
-    boxShadow: `0 10px 22px rgba(12, 24, 20, ${mix(0.12, 0.04, progress).toFixed(3)})`,
-    backdropFilter: `blur(${mix(4, 2, progress).toFixed(2)}px)`,
+    background: `linear-gradient(180deg, rgba(248, 244, 236, ${mix(0.34, 0.12, progress).toFixed(3)}), rgba(255, 255, 255, ${mix(0.16, 0.04, progress).toFixed(3)}))`,
+    borderColor: `rgba(255, 255, 255, ${mix(0.16, 0.08, progress).toFixed(3)})`,
+    boxShadow: `0 18px 40px rgba(12, 24, 20, ${mix(0.18, 0.06, progress).toFixed(3)})`,
+    backdropFilter: `blur(${mix(9, 4, progress).toFixed(2)}px)`,
   };
-  const dayImageStyle = {
-    transform: `scale(${mix(1.18, 1.08, progress).toFixed(3)}) translate(${mix(-3, -1, progress).toFixed(2)}%, ${mix(0, 2, progress).toFixed(2)}%)`,
+  const sharedImageStyle = {
+    transform: `scale(${mix(1.16, 1.16, progress).toFixed(3)}) translate3d(0, 0, 0)`,
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "62% center",
   };
-  const nightImageStyle = {
-    transform: `scale(${mix(1.12, 1.03, progress).toFixed(3)}) translate(${mix(6, 0, progress).toFixed(2)}%, ${mix(-4, 0, progress).toFixed(2)}%)`,
+  const sectionStyle = {
+    background: `linear-gradient(180deg, rgba(${Math.round(mix(242, 8, progress))}, ${Math.round(mix(236, 17, progress))}, ${Math.round(mix(226, 33, progress))}, 1) 0%, rgba(${Math.round(mix(228, 8, progress))}, ${Math.round(mix(219, 14, progress))}, ${Math.round(mix(205, 27, progress))}, 1) 100%)`,
   };
-
+  const overlayStyle = {
+    background: `linear-gradient(180deg, rgba(${Math.round(mix(255, 7, progress))}, ${Math.round(mix(248, 11, progress))}, ${Math.round(mix(238, 17, progress))}, ${mix(0.16, 0.08, progress).toFixed(3)}) 0%, rgba(${Math.round(mix(244, 7, progress))}, ${Math.round(mix(235, 11, progress))}, ${Math.round(mix(220, 17, progress))}, ${mix(0.22, 0.2, progress).toFixed(3)}) 34%, rgba(${Math.round(mix(196, 7, progress))}, ${Math.round(mix(184, 11, progress))}, ${Math.round(mix(162, 17, progress))}, ${mix(0.28, 0.46, progress).toFixed(3)}) 62%, rgba(${Math.round(mix(110, 8, progress))}, ${Math.round(mix(98, 11, progress))}, ${Math.round(mix(82, 17, progress))}, ${mix(0.42, 0.9, progress).toFixed(3)}) 100%)`,
+  };
+  const bottomFadeStyle = {
+    background: `linear-gradient(180deg, rgba(${Math.round(mix(250, 8, progress))}, ${Math.round(mix(244, 17, progress))}, ${Math.round(mix(236, 33, progress))}, 0) 0%, rgba(${Math.round(mix(232, 8, progress))}, ${Math.round(mix(222, 14, progress))}, ${Math.round(mix(210, 27, progress))}, ${mix(0.18, 0.18, progress).toFixed(3)}) 22%, rgba(${Math.round(mix(210, 8, progress))}, ${Math.round(mix(196, 14, progress))}, ${Math.round(mix(178, 27, progress))}, ${mix(0.52, 0.5, progress).toFixed(3)}) 58%, rgba(${Math.round(mix(242, 8, progress))}, ${Math.round(mix(236, 17, progress))}, ${Math.round(mix(226, 33, progress))}, ${mix(0.94, 0.96, progress).toFixed(3)}) 100%)`,
+  };
   const toggleClassName = isNight
-    ? "border-transparent bg-white/18 text-[#f6f8ff] shadow-[0_0_16px_rgba(214,229,255,0.52),0_0_26px_rgba(130,176,255,0.22)]"
-    : "border border-amber-300/30 bg-white/16 text-amber-200 shadow-[0_10px_22px_rgba(122,92,26,0.14)] backdrop-blur-sm";
-
-  const togglePositionClassName = isNight
-    ? "left-3 top-3 sm:left-4 sm:top-4"
-    : "bottom-5 right-3 sm:bottom-6 sm:right-4";
+    ? "border border-white/15 bg-slate-950/42 text-slate-50 shadow-[0_10px_28px_rgba(6,14,28,0.42)] backdrop-blur-md"
+    : "border border-amber-200/30 bg-white/18 text-amber-100 shadow-[0_10px_24px_rgba(122,92,26,0.18)] backdrop-blur-md";
 
   useEffect(() => {
     return () => {
@@ -105,51 +106,86 @@ export default function DayNightHeroMobile({
   };
 
   return (
-    <section className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] h-[calc(100svh-79px)] min-h-[38rem] w-screen overflow-hidden bg-[#08111b] text-white sm:h-[calc(100svh-88px)] sm:min-h-[44rem] lg:hidden">
-      <img
-        src={dayImage.src}
-        alt=""
-        className="absolute inset-0 h-full w-full object-cover object-[76%_center] [will-change:transform]"
-        style={dayImageStyle}
+    <section
+      className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] h-[min(42rem,calc(100vw*1.34))] min-h-[28rem] w-screen overflow-hidden text-white sm:h-[min(46rem,calc(100vw*1.12))] sm:min-h-[32rem] lg:hidden"
+      style={sectionStyle}
+    >
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 [will-change:transform]"
+        style={{
+          backgroundImage: `url(${dayImage.src})`,
+          ...sharedImageStyle,
+        }}
       />
 
-      <img
-        src={nightImage.src}
-        alt=""
-        className="absolute inset-0 h-full w-full object-cover object-[68%_22%] [will-change:clip-path,transform]"
-        style={{ clipPath: scene.nightClipPath, ...nightImageStyle }}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 [will-change:clip-path,transform]"
+        style={{
+          backgroundImage: `url(${nightImage.src})`,
+          clipPath: scene.nightClipPath,
+          ...sharedImageStyle,
+        }}
       />
 
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,11,17,0.03)_0%,rgba(7,11,17,0.08)_24%,rgba(7,11,17,0.24)_50%,rgba(7,11,17,0.84)_100%)]" />
-      <div className="absolute inset-x-0 bottom-0 h-[42%] bg-gradient-to-t from-[#08111b]/92 via-[#08111b]/58 to-transparent" />
+      <div className="absolute inset-0" style={overlayStyle} />
+      <div className="absolute inset-x-0 bottom-0 h-[54%]" style={bottomFadeStyle} />
 
-      <div className="relative z-10 flex h-full w-full flex-col justify-end px-3 pb-20 pt-10 sm:px-5 sm:pb-24 sm:pt-14">
-        <div className="w-full max-w-[13.5rem] pr-14 sm:max-w-[15.5rem] sm:pr-16">
-          <div
-            className="rounded-[1.05rem] border px-3.5 py-3 sm:rounded-[1.25rem] sm:px-4 sm:py-3.5"
+      <div className="relative z-10 flex h-full w-full flex-col justify-end px-3 pb-[max(1rem,env(safe-area-inset-bottom))] pt-[max(0.85rem,env(safe-area-inset-top))] text-[#102018] sm:px-5 sm:pb-6 sm:pt-5">
+        <div className="w-full">
+          <button
+            id="mobile-hero-details"
+            type="button"
+            onClick={() => setIsDetailsVisible((current) => !current)}
+            aria-label={isDetailsVisible ? detailLabels.hide : detailLabels.show}
+            aria-expanded={isDetailsVisible}
+            aria-controls="mobile-hero-details-content"
+            className="w-full rounded-[1.35rem] border px-4 py-4 text-left sm:rounded-[1.5rem] sm:px-5 sm:py-5"
             style={copyPanelStyle}
           >
-            <p
-              className="mb-2 text-[0.66rem] font-extrabold uppercase tracking-[0.16em] sm:text-[0.72rem]"
-              style={eyebrowStyle}
-            >
-              {eyebrow}
-            </p>
-
+            <div className="mb-3 flex w-full items-center justify-between gap-3">
+              <p className="inline-flex rounded-full border border-white/12 bg-black/12 px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-white/88 shadow-[0_8px_18px_rgba(0,0,0,0.12)]">
+                {isNight ? labels.modeNight : labels.modeDay}
+              </p>
+              <span
+                className="inline-flex flex-none items-center justify-center"
+                style={chevronStyle}
+              >
+                <ChevronDown
+                  size={18}
+                  strokeWidth={2}
+                  aria-hidden="true"
+                  className={`transition-transform duration-300 ${isDetailsVisible ? "rotate-180" : "rotate-0"}`}
+                />
+              </span>
+            </div>
             <h1
-              className="max-w-[6.8ch] text-[1.72rem] leading-[0.9] tracking-[-0.045em] sm:max-w-[7.4ch] sm:text-[2.05rem]"
+              className="min-w-0 w-full text-[clamp(1.45rem,6.6vw,2.2rem)] leading-[0.98] tracking-[-0.035em] sm:text-[clamp(1.8rem,7.4vw,2.55rem)]"
               style={titleStyle}
             >
               {title}
             </h1>
-
-            <p
-              className="mt-2 max-w-[12rem] text-[0.8rem] leading-[1.4] sm:mt-2.5 sm:max-w-[13.5rem] sm:text-[0.88rem] sm:leading-[1.46]"
-              style={leadStyle}
+            <div
+              id="mobile-hero-details-content"
+              className={`grid transition-[grid-template-rows,opacity,margin] duration-300 ease-out ${isDetailsVisible ? "mt-3 grid-rows-[1fr] opacity-100" : "mt-0 grid-rows-[0fr] opacity-0"}`}
             >
-              {lead}
-            </p>
-          </div>
+              <div className="overflow-hidden">
+                <p
+                  className="mb-2 text-[0.66rem] font-extrabold uppercase tracking-[0.16em] sm:text-[0.72rem]"
+                  style={eyebrowStyle}
+                >
+                  {eyebrow}
+                </p>
+                <p
+                  className="mt-3  text-[0.92rem] leading-[1.48] text-pretty sm:text-[0.98rem]"
+                  style={leadStyle}
+                >
+                  {lead}
+                </p>
+              </div>
+            </div>
+          </button>
         </div>
       </div>
 
@@ -158,7 +194,7 @@ export default function DayNightHeroMobile({
         onClick={handleToggle}
         aria-label={labels.action}
         title={labels.action}
-        className={`absolute z-20 inline-flex h-9 w-9 items-center justify-center rounded-full transition-[opacity,transform,box-shadow,background-color,border-color,color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:h-10 sm:w-10 ${toggleClassName} ${togglePositionClassName} ${isTransitioning ? "pointer-events-none scale-95 opacity-0" : "opacity-100"}`}
+        className={`absolute right-3 top-[max(0.85rem,env(safe-area-inset-top))] z-20 inline-flex h-10 w-10 items-center justify-center rounded-full transition-[opacity,transform,box-shadow,background-color,border-color,color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:right-4 sm:top-[max(1rem,env(safe-area-inset-top))] sm:h-11 sm:w-11 ${toggleClassName} ${isTransitioning ? "pointer-events-none scale-95 opacity-70" : "opacity-100"}`}
       >
         {isNight ? (
           <Moon size={14} strokeWidth={1.9} aria-hidden="true" />

@@ -1,5 +1,6 @@
 ---
 import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
@@ -27,10 +28,13 @@ const {
 } = Astro.props;
 
 const localePath = (code: Locale) => (code === 'en' ? '/' : `/${code}/`);
+const alternatePathByLocale = new Map(
+	alternates.map((alternate) => [alternate.lang as Locale, new URL(alternate.href).pathname]),
+);
 const switcherLinks = (['en', 'es', 'de'] as Locale[]).map((code) => ({
 	code,
 	label: localeLabel[code],
-	href: localePath(code),
+	href: alternatePathByLocale.get(code) ?? (code === locale ? Astro.url.pathname : localePath(code)),
 }));
 ---
 

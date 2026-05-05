@@ -87,38 +87,43 @@ const localeFlag: Record<string, string> = {
 					<span class="site-header__hamburger-line"></span>
 					<span class="site-header__hamburger-line"></span>
 				</summary>
-				<div class="site-header__mobile-sheet-backdrop"></div>
-				<div class="site-header__mobile-panel" role="navigation" aria-label="Mobile primary">
-					<div class="site-header__mobile-panel-head">
+				<div class="site-header__mobile-sheet">
+					<div class="site-header__mobile-sheet-backdrop"></div>
+					<div class="site-header__mobile-panel" role="navigation" aria-label="Mobile primary">
+						<div class="site-header__mobile-panel-head">
 						<p class="site-header__mobile-panel-title">Menu</p>
+						<a class="site-header__mobile-brand" href={homeHref}>{SITE_TITLE}</a>
 					</div>
-					<div class="site-header__mobile-panel-body">
-						<a class:list={["site-nav-link", "site-nav-link--mobile", { 'is-active': isActivePath(itinerariesHref) }]} href={itinerariesHref} aria-current={isActivePath(itinerariesHref) ? 'page' : undefined}>
-							<span class="site-nav-link__icon" aria-hidden="true">🗺️</span>
-							<span class="site-nav-link__label">{itinerariesLabel}</span>
-						</a>
-						<a class:list={["site-nav-link", "site-nav-link--mobile", { 'is-active': isActivePath(blogHref) }]} href={blogHref} aria-current={isActivePath(blogHref) ? 'page' : undefined}>
-							<span class="site-nav-link__icon" aria-hidden="true">📰</span>
-							<span class="site-nav-link__label">{blogLabel}</span>
-						</a>
-					</div>
-					<div class="lang-switcher lang-switcher--mobile" aria-label={switcherLabel}>
-						<p class="site-header__mobile-panel-label">{switcherLabel}</p>
-						<div class="lang-switcher__track">
-							{switcherLinks.map((link) => (
-								<a
-									href={link.href}
-									lang={link.code}
-									hreflang={link.code}
-									aria-current={link.code === locale ? 'page' : undefined}
-									aria-label={`${switcherLabel}: ${link.label}`}
-									title={link.label}
-									class:list={['lang-switcher__link', { 'is-active': link.code === locale }]}
-								>
-									<span class="lang-switcher__flag" aria-hidden="true">{localeFlag[link.code] ?? '🌐'}</span>
-									<span class="sr-only">{link.label}</span>
-								</a>
-							))}
+						<div class="site-header__mobile-panel-body">
+							<a class:list={["site-nav-link", "site-nav-link--mobile", { 'is-active': isActivePath(itinerariesHref) }]} href={itinerariesHref} aria-current={isActivePath(itinerariesHref) ? 'page' : undefined}>
+								<span class="site-nav-link__icon" aria-hidden="true">🗺️</span>
+								<span class="site-nav-link__label">{itinerariesLabel}</span>
+							</a>
+							<a class:list={["site-nav-link", "site-nav-link--mobile", { 'is-active': isActivePath(blogHref) }]} href={blogHref} aria-current={isActivePath(blogHref) ? 'page' : undefined}>
+								<span class="site-nav-link__icon" aria-hidden="true">📰</span>
+								<span class="site-nav-link__label">{blogLabel}</span>
+							</a>
+						</div>
+						<div class="site-header__mobile-panel-foot">
+							<div class="lang-switcher lang-switcher--mobile" aria-label={switcherLabel}>
+								<p class="site-header__mobile-panel-label">{switcherLabel}</p>
+								<div class="lang-switcher__track">
+									{switcherLinks.map((link) => (
+										<a
+											href={link.href}
+											lang={link.code}
+											hreflang={link.code}
+											aria-current={link.code === locale ? 'page' : undefined}
+											aria-label={`${switcherLabel}: ${link.label}`}
+											title={link.label}
+											class:list={['lang-switcher__link', { 'is-active': link.code === locale }]}
+										>
+											<span class="lang-switcher__flag" aria-hidden="true">{localeFlag[link.code] ?? '🌐'}</span>
+											<span class="sr-only">{link.label}</span>
+										</a>
+									))}
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

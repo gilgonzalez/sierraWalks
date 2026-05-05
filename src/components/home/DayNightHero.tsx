@@ -1,7 +1,7 @@
 import { useLayoutEffect, useState } from "react";
 import DayNightHeroDesktop from "./DayNightHeroDesktop";
 import DayNightHeroMobile from "./DayNightHeroMobile";
-import type { DayNightHeroProps } from "./DayNightHeroShared";
+import type { DayNightHeroProps } from "./dayNightHeroShared";
 
 const DESKTOP_QUERY = "(min-width: 1024px)";
 

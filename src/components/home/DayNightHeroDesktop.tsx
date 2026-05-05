@@ -11,7 +11,7 @@ import {
   getLeadStyle,
   getTitleStyle,
   type DayNightHeroProps,
-} from "./DayNightHeroShared";
+} from "./dayNightHeroShared";
 
 export default function DayNightHeroDesktop({
   locale,

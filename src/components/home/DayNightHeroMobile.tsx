@@ -11,7 +11,7 @@ import {
   getTitleStyle,
   mix,
   type DayNightHeroProps,
-} from "./DayNightHeroShared";
+} from "./dayNightHeroShared";
 
 export default function DayNightHeroMobile({
   locale,
